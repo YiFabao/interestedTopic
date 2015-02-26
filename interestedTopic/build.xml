@@ -14,7 +14,6 @@
     <property name="webapp.name" value="interestedTopic" />  
     <property name="src.dir" value="${basedir}/src" />  
 	<property name="lib.dir" value="${webRoot.dir}/WEB-INF/lib" /> 
-	<property name="lib_binbin.dir" value="${webRoot.dir}/WEB-INF/lib_binbin" /> 
     <property name="build.dir" value="${basedir}/build" />  
 	
 	<!--清理-->
