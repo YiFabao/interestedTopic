@@ -12,7 +12,6 @@ public class UserController extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		super.doGet(req, resp);
 		req.setCharacterEncoding("utf-8");
 		String cmd = req.getParameter("cmd");
 		if(cmd==null)
@@ -38,7 +37,6 @@ public class UserController extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		super.doPost(req, resp);
 		doGet(req, resp);
 	}
 	
