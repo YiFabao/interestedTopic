@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 public class UserController extends HttpServlet{
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
 		String cmd = req.getParameter("cmd");
@@ -28,7 +28,7 @@ public class UserController extends HttpServlet{
 		}
 	}
 
-	private void xunta_user_login(HttpServletRequest req,
+	public void xunta_user_login(HttpServletRequest req,
 			HttpServletResponse resp) {
 			System.out.println("xunta_user_login...");
 			try {
