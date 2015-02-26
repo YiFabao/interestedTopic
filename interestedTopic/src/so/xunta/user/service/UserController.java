@@ -31,6 +31,12 @@ public class UserController extends HttpServlet{
 	private void xunta_user_login(HttpServletRequest req,
 			HttpServletResponse resp) {
 			System.out.println("xunta_user_login...");
+			try {
+				resp.getWriter().write("登录成功");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		
 	}
 
