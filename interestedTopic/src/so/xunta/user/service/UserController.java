@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@SuppressWarnings("serial")
 public class UserController extends HttpServlet{
 
 	@Override
@@ -28,11 +29,12 @@ public class UserController extends HttpServlet{
 		}
 	}
 
-	public void xunta_user_login(HttpServletRequest req,
+	private void xunta_user_login(HttpServletRequest req,
 			HttpServletResponse resp) {
 			System.out.println("xunta_user_login...");
 			try {
 				resp.getWriter().write("登录成功");
+				resp.flushBuffer();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -41,7 +43,7 @@ public class UserController extends HttpServlet{
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		doGet(req, resp);
 	}
