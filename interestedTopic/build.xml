@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+
+<project name="interestedTopic"  basedir="." default="deploy">
+	<description>
+		topicmatch
+    </description>
+	
+	<!--定义变量-->
+	<property name="encode" value="utf-8" /> 
+    <property name="webRoot.dir" value="${basedir}/WebContent" />  
+    <property name="dist.dir" value="${basedir}/dist" /> 
+    <property name="ant.dir" value="/opt/apache-ant-1.9.4" />  
+	<property name="catalina.home" value="/opt/apache-tomcat-7.0.57"/>
+    <property name="webapp.name" value="interestedTopic" />  
+    <property name="src.dir" value="${basedir}/src" />  
+	<property name="lib.dir" value="${webRoot.dir}/WEB-INF/lib" /> 
+	<property name="lib_binbin.dir" value="${webRoot.dir}/WEB-INF/lib_binbin" /> 
+    <property name="build.dir" value="${basedir}/build" />  
+	
+	<!--清理-->
+	<target name="clear" description="清理旧文件">
+		<echo message="清理"></echo>
+		<!-- 删除之前的目录结构 -->  
+        <delete dir="${build.dir}" />  
+        <delete dir="${dist.dir}" />  
+        <delete file="${catalina.home}/webapps/${webapp.name}.war" />  
+        <delete dir="${catalina.home}/webapps/${webapp.name}" />  
+	</target>
+	
+	<target name="clear.dist" description="clear dist">
+		<echo message="clear dist..."></echo>	    
+		<delete dir="${dist.dir}"/>
+		<echo message="clear dist ok!"></echo>
+	</target>
+	
+	 <!-- 创建目录结构 -->  
+    <target name="init" depends="clear" description="创建初始化目录结构">  
+        <mkdir dir="${build.dir}/classes" />  
+        <mkdir dir="${dist.dir}" />  
+    </target>  
+	
+	<!-- 初始化classpath -->  
+    <path id="project.classpath">  
+        <fileset dir="${lib.dir}">  
+            <include name="**/*.jar" />  
+        </fileset>  
+        <fileset dir="${lib_binbin.dir}">  
+            <include name="**/*.jar" />  
+        </fileset>  
+        <!-- 添加tomcat类路径 -->  
+        <fileset dir="${catalina.home}/lib">  
+            <include name="*.jar" />  
+        </fileset>  
+        <!-- ant lib包  -->  
+        <fileset dir="${ant.dir}">  
+            <include name="**/*.jar" />  
+        </fileset>  
+    </path>  
+	
+    <!-- get the source compile classpath in a printable form -->  
+    <pathconvert pathsep="${line.separator}|   |-- "  
+             property="echo.path.compile"  
+             refid="project.classpath">  
+    </pathconvert>  
+      
+    <!-- show classpath jars -->  
+    <target name="print_classpath">  
+        <echo message="|-- compile classpath"/>  
+        <echo message="|   |"/>  
+        <echo message="|   |-- ${echo.path.compile}"/>  
+    </target> 
+	
+	<!--编译-->
+	<target name="compile"  depends ="init" description="编译java文件">
+		<echo message="编译"></echo>
+		<javac srcdir="${src.dir}" destdir="${build.dir}/classes" includeantruntime="false"
+			source="1.8" target="1.8" deprecation="true" debug="true" encoding="${encode}" >  
+           <classpath refid="project.classpath" /> 
+        </javac>
+		<echo message="将src目录下的资源文件"></echo>
+		<copy todir="${build.dir}/classes">  
+			<fileset dir="${src.dir}">  
+				<include name="**/*.xml" />  
+				<include name="**/*.properties" />  
+				<include name="**/*.sql" />  
+				<include name="**/*.dic" />  
+				<include name="**/*.txt" />  
+			</fileset>   
+		</copy>  
+		<echo message="编译完成"></echo>
+	</target>
+	
+	<!-- 打成war包, 名称默认为 项目名 -->  
+    <target name="war" depends="compile" description="将工程打成war包">  
+        <echo message="begin war..." />  
+        <war destfile="${dist.dir}/${webapp.name}.war" basedir="${webRoot.dir}"   
+            webxml="${webRoot.dir}/WEB-INF/web.xml">  
+            <lib dir="${lib.dir}" />  
+            <classes dir="${build.dir}/classes" />  
+            <fileset dir="${webRoot.dir}">  
+                <include name="***.*" />  
+            </fileset>  
+        </war>  
+        <echo message="end war..." />  
+    </target>  
+	
+	<!-- copy war包 tomcat的deploy目录 -->  
+    <target name="deploy" depends="war" description="部署项目">  
+        <echo message="begin deploy..." />  
+        <copy file="${dist.dir}/${webapp.name}.war" todir="${catalina.home}/webapps" />  
+        <echo message="end deploy..." />  
+    </target> 
+	
+
+   	<target name="linux.start.tomcat" description="start tomcat...">
+		<echo message="starting the tomcat ...."></echo>   	    
+		<exec dir="${catalina.home}/bin" executable="bash">
+		    <env key="CATALINA_HOME" value="${catalina.home}"/>
+		    <arg value="startup.sh"/>
+		</exec>
+		<echo message="start tomcat complemete!"></echo>
+   	</target>
+   	<target name="linux.stop.tomcat" description="start tomcat...">
+		<echo message="stopping the tomcat ...."></echo>   	    
+		<exec dir="${catalina.home}/bin" executable="bash">
+		    <env key="CATALINA_HOME" value="${catalina.home}"/>
+		    <arg value="shutdown.sh"/>
+		</exec>
+		<echo message="stop tomcat complemete!"></echo>
+   	</target>
+
+</project>
